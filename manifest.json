@@ -1,0 +1,5 @@
+{
+  "package": "linux_tts_player",
+  "name": "Linux TTS player (gTTS)",
+  "conflicts": ["391644525", "gtts_player"]
+}
