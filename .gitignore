@@ -1,6 +1,11 @@
 __pycache__/
 *.py[cod]
-.ankiaddon
+*$py.class
+*.so
+.env
+.venv/
 user_files/
 *.ankiaddon
 .DS_Store
+dist/
+build/

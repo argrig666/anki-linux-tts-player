@@ -1,5 +1,5 @@
 {
   "package": "linux_tts_player",
-  "name": "Linux TTS player (gTTS)",
+  "name": "Linux TTS Player (Edge Neural & Azure Speech)",
   "conflicts": ["391644525", "gtts_player"]
 }
