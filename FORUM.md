@@ -1,14 +1,45 @@
-# Ready-to-post reply for Anki forums
-
-Suggested threads:
-- https://forums.ankiweb.net/t/how-to-get-tts-working-on-linux-ubuntu/52905
-- https://forums.ankiweb.net/t/ignore-built-in-tts-code-when-running-in-linux/27426
-
-Or post as a new announcement topic in **Add-ons**:
-**Title:** [Add-on] Linux TTS Player: Zero-Config Microsoft Edge / Azure Neural Voices for native {{tts}} tags
+# Ready-to-post replies for Anki forums
 
 ---
 
+## 1. Tailored Reply for: "How to get TTS working on Linux (Ubuntu)?"
+**Thread URL:** https://forums.ankiweb.net/t/how-to-get-tts-working-on-linux-ubuntu/52905
+
+```markdown
+For anyone arriving here looking for a clean, zero-config solution to the `no players found for TTSTag(...)` error on Linux:
+
+While Anki's official gTTS sample add-on works for basic speech, it has a few known drawbacks:
+1. Voices can sound robotic and metallic compared to modern neural TTS.
+2. It breaks if you switch Anki profiles in the same session without restarting Anki (because the player registry is cleared on profile close).
+3. If cards were created on iOS/macOS or specify Apple/Android/Microsoft voices (e.g. `voices=Apple_...`), they often fail to match.
+
+I packaged an upgraded drop-in add-on that brings **Microsoft Azure / Edge Neural voices** to Linux without requiring any API keys, accounts, or complex setup:
+
+👉 **GitHub Repository:** https://github.com/argrig666/anki-linux-tts-player  
+👉 **Latest Release:** [linux_tts_player.ankiaddon (v1.0.0)](https://github.com/argrig666/anki-linux-tts-player/releases/tag/v1.0.0)
+
+### What it does:
+- **Ultra-realistic neural voices** across 142 languages (Chinese `zh_CN-XiaoxiaoNeural`, English, Japanese, French, Italian, Spanish, German, etc.).
+- **Zero card edits**: Works directly with your existing `{{tts zh_CN:Field}}` tags without touching note templates.
+- **Cross-platform voice aliasing**: Automatically maps `Apple_*`, `Microsoft_*`, or Android TTS voice names to matching neural voices.
+- **Dynamic synthesis & local caching**: Synthesizes in ~500 ms on first play and caches to disk; repeat reviews play instantly (<1 ms).
+- **Multi-tier resilience**: Automatically falls back to Google Translate (gTTS) or offline `espeak-ng` if you're offline.
+- **Proper lifecycle handling**: Re-registers automatically when switching profiles (fixing the profile-reopen bug).
+
+### Installation:
+1. Download `linux_tts_player.ankiaddon` from the [Releases](https://github.com/argrig666/anki-linux-tts-player/releases) page.
+2. In Anki: **Tools → Add-ons → Install from file…**
+3. Ensure `mpv` is installed on your system (`sudo apt install mpv` on Ubuntu/Debian, or `sudo pacman -S mpv` on Arch).
+4. Restart Anki.
+```
+
+---
+
+## 2. Standalone Announcement Topic (for Add-ons category)
+**Category:** Add-ons  
+**Title:** [Add-on] Linux TTS Player: Zero-Config Microsoft Edge / Azure Neural Voices for native {{tts}} tags
+
+```markdown
 Hi everyone,
 
 If you use Anki on Linux, you've probably run into the **Linux TTS void**:
@@ -42,3 +73,4 @@ To solve this, I created **Linux TTS Player (Edge Neural / Azure Speech)**: a li
 - **Prerequisite**: Ensure `mpv` is installed (`sudo pacman -S mpv` or `sudo apt install mpv`).
 
 Feedback and contributions welcome!
+```
