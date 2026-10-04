@@ -12,7 +12,7 @@ Personal restore list for a fresh Anki Desktop installation.
 | New Cards Learned Per Day | `90737033` | enabled | Legacy add-on; its metadata advertises compatibility only through Anki 25.09.2. |
 | gTTS text to speech support | `391644525` | disabled | Kept installed as a fallback/legacy option. |
 | Linux TTS player (Azure / Edge Neural TTS) | local add-on directory: `linux_tts_player` | enabled | This repository; install from the release `.ankiaddon` or clone into `addons21/linux_tts_player`. |
-| Pronounce Selected Text | custom add-on directory: `pronounce_selected` | enabled | Personal add-on; source/installer is maintained in the private `anki-pronounce-selected` project. Default shortcut: `Alt+C`. |
+| Pronounce Selected Text | `1733193194` | enabled | Public AnkiWeb add-on; source is maintained at `argrig666/anki-pronounce-selected`. Default shortcut: `Alt+C`. |
 
 ## Restore procedure
 
@@ -22,7 +22,7 @@ Personal restore list for a fresh Anki Desktop installation.
 4. Restart Anki.
 5. Re-check legacy add-ons after each Anki upgrade; if one causes errors, disable it rather than deleting it.
 
-The personal `Pronounce Selected Text` add-on is not an AnkiWeb numeric-ID add-on. Restore it from its packaged `pronounce_selected.ankiaddon` installer or copy the project into `addons21/pronounce_selected`.
+The public `Pronounce Selected Text` add-on can be restored with AnkiWeb code `1733193194`, or from its [source repository](https://github.com/argrig666/anki-pronounce-selected).
 
 For Linux TTS playback, install `mpv`; `espeak-ng` is optional for offline fallback. The Linux TTS Player handles Android/Apple voice names such as `com.google.android.tts-it-it-*` and `Apple_Federica_(Premium)` through its alias resolver.
 
