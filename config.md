@@ -6,7 +6,7 @@ When a card template specifies a general language tag without a voice parameter 
 
 Available popular voices include:
 - **Italian (`it_IT`)**: `it-IT-ElsaNeural` (Female), `it-IT-DiegoNeural` (Male), `it-IT-IsabellaNeural` (Female), `it-IT-GiuseppeMultilingualNeural` (Male)
-- **French (`fr_FR`)**: `fr-FR-VivienneMultilingualNeural` (Female), `fr-FR-DeniseNeural` (Female), `fr-FR-HenriNeural` (Male), `fr-FR-EloiseNeural` (Female), `fr-FR-RemyMultilingualNeural` (Male)
+- **French (`fr_FR`)**: `fr-FR-DeniseNeural` (Female, recommended default), `fr-FR-EloiseNeural` (Female), `fr-FR-HenriNeural` (Male), `fr-FR-VivienneMultilingualNeural` (Female), `fr-FR-RemyMultilingualNeural` (Male)
 - **French Canada (`fr_CA`)**: `fr-CA-SylvieNeural` (Female), `fr-CA-JeanNeural` (Male), `fr-CA-AntoineNeural` (Male)
 - **English US (`en_US`)**: `en-US-JennyNeural` (Female), `en-US-GuyNeural` (Male), `en-US-AriaNeural` (Female)
 - **English UK (`en_GB`)**: `en-GB-SoniaNeural` (Female), `en-GB-RyanNeural` (Male)

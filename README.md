@@ -41,7 +41,7 @@ Includes **322 Microsoft Azure / Edge Neural voices across 142 locales** (all bu
 | Language | Default Neural Voice | Gender | Additional Included Voices |
 | :--- | :--- | :--- | :--- |
 | **Italian (`it_IT`)** | `it-IT-ElsaNeural` | Female | `it-IT-DiegoNeural` (M), `it-IT-IsabellaNeural` (F), `it-IT-GiuseppeMultilingualNeural` (M) |
-| **French (`fr_FR`)** | `fr-FR-VivienneMultilingualNeural` | Female | `fr-FR-DeniseNeural` (F), `fr-FR-HenriNeural` (M), `fr-FR-EloiseNeural` (F), `fr-FR-RemyMultilingualNeural` (M) |
+| **French (`fr_FR`)** | `fr-FR-DeniseNeural` | Female | `fr-FR-EloiseNeural` (F), `fr-FR-HenriNeural` (M), `fr-FR-VivienneMultilingualNeural` (F), `fr-FR-RemyMultilingualNeural` (M) |
 | **French Canada (`fr_CA`)** | `fr-CA-SylvieNeural` | Female | `fr-CA-JeanNeural` (M), `fr-CA-AntoineNeural` (M), `fr-CA-ThierryNeural` (M) |
 | **English US (`en_US`)** | `en-US-JennyNeural` | Female | `en-US-GuyNeural` (M), `en-US-AriaNeural` (F) |
 | **English UK (`en_GB`)** | `en-GB-SoniaNeural` | Female | `en-GB-RyanNeural` (M) |
@@ -96,7 +96,7 @@ In Anki, navigate to **Tools** → **Add-ons** → select **Linux TTS Player (Ed
 {
   "default_voices": {
     "it_IT": "it-IT-ElsaNeural",
-    "fr_FR": "fr-FR-VivienneMultilingualNeural",
+    "fr_FR": "fr-FR-DeniseNeural",
     "en_US": "en-US-JennyNeural"
   },
   "volume": 140,
@@ -105,7 +105,7 @@ In Anki, navigate to **Tools** → **Add-ons** → select **Linux TTS Player (Ed
 }
 ```
 
-- **`default_voices`**: Choose your preferred voice for any language when a card template uses general tags like `{{tts it_IT:Word}}`.
+- **`default_voices`**: Choose your preferred voice for any language when a card template uses general tags like `{{tts it_IT:Word}}`. Prefer dedicated monolingual voices (e.g. `fr-FR-DeniseNeural`) over `*MultilingualNeural` voices for language-learning decks.
 - **`volume`**: Adjust software playback gain (default: `140`%).
 - **`audio_output`**: Set mpv audio driver (default: `"pipewire,pulse"`).
 - **`debug_log`**: Set to `true` to log synthesis events to `user_files/debug.log`.
@@ -120,11 +120,24 @@ flowchart TD
     B --> C{"Check Local Cache"}
     C -- "Hit (< 1 ms)" --> F["Direct mpv Subprocess Playback (PipeWire)"]
     C -- "Miss (New Card)" --> D["edge-tts Neural Synthesis (~500 ms)"]
-    D -- "Success" --> E["Save MP3 to Cache"]
-    D -- "Network Error" --> G["gTTS / espeak-ng Fallback"]
-    G --> E
+    D -- "Success" --> E["Save MP3 to Edge Cache Slot"]
+    D -- "Network / 403 Error" --> G["gTTS / espeak-ng Fallback"]
+    G --> H["Save to Separate Fallback Cache Slot"]
     E --> F
+    H --> F
 ```
+
+Cache keys include the synthesis engine (`edge` / `gtts` / `espeak`) so a temporary fallback cannot overwrite a neural cache entry.
+
+---
+
+## Troubleshooting
+
+If neural voices suddenly sound lower quality, or debug logs show `403 Invalid response status`, see **[SUPPORT.md](SUPPORT.md)**. Short version for the October 2026 Edge TTS outage:
+
+1. Use add-on **v1.1.0+** (`edge-tts>=7.3.0`).
+2. Clear `user_files/cache/` and restart Anki.
+3. Re-review affected cards so audio regenerates.
 
 ---
 

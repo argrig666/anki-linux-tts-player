@@ -14,6 +14,8 @@ INCLUDE_FILES = [
     "config.md",
     "voices.json",
     "LICENSE",
+    "SUPPORT.md",
+    "README.md",
 ]
 
 INCLUDE_DIRS = [

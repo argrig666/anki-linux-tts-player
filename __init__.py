@@ -427,18 +427,28 @@ class LinuxTTSPlayer(TTSProcessPlayer):
         os.makedirs(_CACHE_DIR, exist_ok=True)
         voice_id = voice.edge_voice or voice.gtts_lang or voice.name
         speed_key = round(tag.speed, 2)
-        key = checksum(f"{voice_id}-{speed_key}-{text}")
-        mp3_path = os.path.join(_CACHE_DIR, f"{key}.mp3")
-        wav_path = os.path.join(_CACHE_DIR, f"{key}.wav")
+
+        def _cache_path(engine: str, ext: str) -> str:
+            # Include engine in the key so a fallback (gTTS/espeak) never overwrites
+            # a neural Edge cache slot when Microsoft's endpoint is temporarily down.
+            key = checksum(f"{engine}-{voice_id}-{speed_key}-{text}")
+            return os.path.join(_CACHE_DIR, f"{key}.{ext}")
+
+        edge_mp3 = _cache_path("edge", "mp3")
+        gtts_mp3 = _cache_path("gtts", "mp3")
+        espeak_wav = _cache_path("espeak", "wav")
 
         audio_path: str | None = None
 
-        if os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0:
-            audio_path = mp3_path
-            _log(f"Cache hit ({voice_id}): '{text}'")
-        elif os.path.exists(wav_path) and os.path.getsize(wav_path) > 0:
-            audio_path = wav_path
-            _log(f"Cache hit ({voice_id}): '{text}'")
+        if os.path.exists(edge_mp3) and os.path.getsize(edge_mp3) > 0:
+            audio_path = edge_mp3
+            _log(f"Cache hit (edge/{voice_id}): '{text}'")
+        elif os.path.exists(gtts_mp3) and os.path.getsize(gtts_mp3) > 0:
+            audio_path = gtts_mp3
+            _log(f"Cache hit (gtts/{voice_id}): '{text}'")
+        elif os.path.exists(espeak_wav) and os.path.getsize(espeak_wav) > 0:
+            audio_path = espeak_wav
+            _log(f"Cache hit (espeak/{voice_id}): '{text}'")
         else:
             # 1. Attempt Microsoft Azure / Edge Neural TTS
             if voice.edge_voice:
@@ -446,9 +456,9 @@ class LinuxTTSPlayer(TTSProcessPlayer):
                     rate_pct = int((tag.speed - 1.0) * 100)
                     rate_str = f"{rate_pct:+d}%"
                     t0 = time.time()
-                    _run_async(_synthesize_edge(text, voice.edge_voice, rate_str, mp3_path))
-                    if os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0:
-                        audio_path = mp3_path
+                    _run_async(_synthesize_edge(text, voice.edge_voice, rate_str, edge_mp3))
+                    if os.path.exists(edge_mp3) and os.path.getsize(edge_mp3) > 0:
+                        audio_path = edge_mp3
                         dt = round((time.time() - t0) * 1000)
                         _log(f"Synthesized Edge TTS ({voice.edge_voice}, {dt}ms): '{text}'")
                 except Exception as err:
@@ -465,9 +475,9 @@ class LinuxTTSPlayer(TTSProcessPlayer):
                             lang_check=False,
                             slow=tag.speed < 1,
                         )
-                        tts.save(mp3_path)
-                        if os.path.exists(mp3_path) and os.path.getsize(mp3_path) > 0:
-                            audio_path = mp3_path
+                        tts.save(gtts_mp3)
+                        if os.path.exists(gtts_mp3) and os.path.getsize(gtts_mp3) > 0:
+                            audio_path = gtts_mp3
                             _log(f"Synthesized gTTS ({gtts_code}): '{text}'")
                     except Exception as err:
                         _log(f"gTTS fallback failed ({err}); trying espeak...")
@@ -484,7 +494,7 @@ class LinuxTTSPlayer(TTSProcessPlayer):
                             "-s",
                             str(speed),
                             "-w",
-                            wav_path,
+                            espeak_wav,
                             "--",
                             text,
                         ],
@@ -492,8 +502,8 @@ class LinuxTTSPlayer(TTSProcessPlayer):
                         stdout=subprocess.DEVNULL,
                         stderr=subprocess.DEVNULL,
                     )
-                    if os.path.exists(wav_path) and os.path.getsize(wav_path) > 0:
-                        audio_path = wav_path
+                    if os.path.exists(espeak_wav) and os.path.getsize(espeak_wav) > 0:
+                        audio_path = espeak_wav
                         _log(f"Synthesized espeak-ng: '{text}'")
                 except Exception as err:
                     _log(f"espeak fallback failed ({err})")
